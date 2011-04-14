@@ -3,7 +3,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-        <title>Task Board</title>
+        <meta name="Name"    content="Task Board 2.0" />
+    		<meta name="Version" content="2011.4" />
+    		<meta name="Vendor"  content="Wildfire Interactive, Inc." />
+
+        <title>TaskBoard</title>
 
         <link type="text/css" rel="stylesheet" href="__SERVER_URL__/js-lib/yui/2.6.0/build/reset-fonts-grids/reset-fonts-grids.css" />
         <link type="text/css" rel="stylesheet" href="__SERVER_URL__/css/toolkit/0.02/renderer.css" />
@@ -21,6 +25,7 @@
         <script type="text/javascript" src="__SERVER_URL__/js/toolkit/0.02/renderer/renderer.js"></script>
         <script type="text/javascript" src="__SERVER_URL__/js/toolkit/0.02/editor.js"></script>
         <script type="text/javascript" src="__SERVER_URL__/js/toolkit/0.02/datasource.js"></script>
+        <script type="text/javascript" src="/apps/1.23/sdk.js"></script> 
         <script type="text/javascript">
 
         function initTaskboard() {
@@ -44,36 +49,36 @@
                 statusDiv.innerHTML = msg || '';
             }
 
-            var insideRally         = RALLY.toolkit.insideRally();
-            var showActuals         = false;
-            var currentProjectOid   = '__PROJECT_OID__';
-            var projectScopeUp      = '__PROJECT_SCOPING_UP__' == 'true';
-            var projectScopeDown    = '__PROJECT_SCOPING_DOWN__' == 'true';
+            var insideRally = RALLY.toolkit.insideRally();
+            var showActuals = false;
+            var currentProjectOid = '__PROJECT_OID__';
+            var projectScopeUp = '__PROJECT_SCOPING_UP__' == 'true';
+            var projectScopeDown = '__PROJECT_SCOPING_DOWN__' == 'true';
 
             // use this to rebuild the full query, stitching in the
             // project scoping information from the top-level variables above
             function getQuery() {
-                var scoping             = "&project=${currentProject}&projectScopeUp=" + projectScopeUp + "&projectScopeDown=" + projectScopeDown;
-                var paging              = "&pagesize=100";
+                var scoping = "&project=${currentProject}&projectScopeUp=" + projectScopeUp + "&projectScopeDown=" + projectScopeDown;
+                var paging = "&pagesize=100";
 
                 return {
-                    "currentProject"   : "/iteration:current/project",
-                    "#storyType"        : "/typedefinition?query=(Name = \"Hierarchical Requirement\")",
+                    "currentProject" : "/iteration:current/project",
+                    "#storyType" : "/typedefinition?query=(Name = \"Hierarchical Requirement\")",
 
-                    "taskUnit"          : "${iteration/workspace/workspaceConfiguration/taskUnitName}",
-                    "storyStates"       : "${#storyType/attributes[name=schedule state]/allowedvalues/stringvalue}",
+                    "taskUnit" : "${iteration/workspace/workspaceConfiguration/taskUnitName}",
+                    "storyStates" : "${#storyType/attributes[name=schedule state]/allowedvalues/stringvalue}",
 
-                    "iteration"         : "/iteration:current?fetch=name,objectid&order=StartDate",
-                    "iterations"        : "/iterations?fetch=name,objectid&order=StartDate,Name&project=${currentProject}&projectScopeUp=false&projectScopeDown=false" + paging,
+                    "iteration" : "/iteration:current?fetch=name,objectid&order=StartDate",
+                    "iterations" : "/iterations?fetch=name,objectid&order=StartDate,Name&project=${currentProject}&projectScopeUp=false&projectScopeDown=false" + paging,
 
-                    "users"             : "/users?fetch=displayname,loginname,emailaddress,objectid" + paging,
+                    "users" : "/users?fetch=displayname,loginname,emailaddress,objectid" + paging,
 
-                    "tasks"             : "/tasks?fetch=taskindex,name,objectid,formattedid,owner,blocked,estimate,todo,actuals,state,workproduct&query=(Iteration = ${iteration})" + scoping + paging,
+                    "tasks" : "/tasks?fetch=taskindex,name,objectid,formattedid,owner,blocked,estimate,todo,actuals,state,workproduct&query=(Iteration = ${iteration})" + scoping + paging,
 
-                    "stories"           : "/hierarchicalrequirement?fetch=rank,blocked,formattedid,name,objectid,owner,project,schedulestate,taskestimatetotal,taskremainingtotal,taskactualtotal,tasks&order=Rank&query=(Iteration = ${iteration})" + scoping + paging,
-                    "defects"           : "/defect?fetch=rank,blocked,formattedid,name,objectid,owner,project,schedulestate,taskestimatetotal,taskremainingtotal,taskactualtotal&order=Rank&query=(Iteration = ${iteration})" + scoping + paging,
-                    "defectsuite"       : "/defectsuite?fetch=rank,blocked,formattedid,name,objectid,owner,project,schedulestate,taskestimatetotal,taskremainingtotal,taskactualtotal&order=Rank&query=(Iteration = ${iteration})" + scoping + paging,
-                    "testsets"          : "/testset?fetch=rank,blocked,formattedid,name,objectid,owner,project,schedulestate,taskestimatetotal,taskremainingtotal,taskactualtotal&query=(Iteration = ${iteration})" + scoping + paging
+                    "stories" : "/hierarchicalrequirement?fetch=rank,blocked,formattedid,name,objectid,owner,project,schedulestate,taskestimatetotal,taskremainingtotal,taskactualtotal,tasks&order=Rank&query=(Iteration = ${iteration})" + scoping + paging,
+                    "defects" : "/defect?fetch=rank,blocked,formattedid,name,objectid,owner,project,schedulestate,taskestimatetotal,taskremainingtotal,taskactualtotal&order=Rank&query=(Iteration = ${iteration})" + scoping + paging,
+                    "defectsuite" : "/defectsuite?fetch=rank,blocked,formattedid,name,objectid,owner,project,schedulestate,taskestimatetotal,taskremainingtotal,taskactualtotal&order=Rank&query=(Iteration = ${iteration})" + scoping + paging,
+                    "testsets" : "/testset?fetch=rank,blocked,formattedid,name,objectid,owner,project,schedulestate,taskestimatetotal,taskremainingtotal,taskactualtotal&query=(Iteration = ${iteration})" + scoping + paging
                 };
             }
             var query = getQuery();
@@ -173,7 +178,7 @@
                     if( regexp.test( value.FormattedID ) ) {
                         detail_type = 'df';
                     }
-                    html.push('<div class="id"><a href="/slm/detail/' + detail_type + '/' + value.ObjectID + '" target="story-window">' + value.FormattedID + '</a></div>');
+                    html.push('<div class="id">' + value.FormattedID + '</div>');
                     html.push('<div class="name">' + RALLY.toolkit.niceSubstring(value.Name, 100) + '</div>');
                     html.push('<div class="' + ownerClass.join(' ') + '">' + owner + '</div>');
 
@@ -184,9 +189,7 @@
                     }
 
                     html.push('<div class="clear"></div>');
-                    html.push('<a href="/slm/tk/create.sp?storyCardOid=' + (2 + value.ObjectID) + '" target="task-window">add task</a>');
                     html.push('</div>');
-
                     container.innerHTML = html.join('');
                 },
 
@@ -253,7 +256,11 @@
                     }
 
                     html.push('<div style="' + contentStyle + '">');
-                    html.push('<div class="id"><a href="/slm/detail/tk/' + item.ObjectID + '" target="task-window">' + item.FormattedID + '</a></div>');
+                    html.push('<div class="id">');
+                    	var editem = { "_ref":"https://trial.rallydev.com/slm/webservice/1.23/task/" + item.ObjectID, "FormattedID": item.FormattedID };
+											var config = {item: editem, text: item.FormattedID};
+										html.push(new rally.sdk.ui.basic.EditLink(config).renderToHtml());
+                    html.push('</div>');
                     html.push('<div class="name">' + RALLY.toolkit.niceSubstring(item.Name) + '</div>');
                     html.push('<div class="' + ownerClass.join(' ') + '">' + owner + '</div>');
 
@@ -264,6 +271,7 @@
                         html.push( renderTimeCell((schema.Actuals) ? schema.Actuals.ShortName : 'Actuals', item.Actuals, actClass.join(' ')) );
                     }
                     html.push('<div class="clear"></div>');
+										
                     html.push('</div>');
                     html.push('</div>');
 
@@ -303,21 +311,21 @@
             };
 
             RALLY.toolkit.Controller = function(query, viewConfig) {
-                this.query          = query;
-                this.schemaConfig   = {};
-                this.viewConfig     = viewConfig;
-                this.dataSource     = new RALLY.toolkit.TaskboardDataSource(query, '__SERVER_URL__');
-                this.view           = new RALLY.toolkit.Grid('taskboard', this.viewConfig);
-                this.editor         = new RALLY.toolkit.Editor();
+                this.query = query;
+                this.schemaConfig = {};
+                this.viewConfig = viewConfig;
+                this.dataSource = new RALLY.toolkit.TaskboardDataSource(query, '__SERVER_URL__');
+                this.view = new RALLY.toolkit.Grid('taskboard', this.viewConfig);
+                this.editor = new RALLY.toolkit.Editor();
             };
 
             RALLY.toolkit.Controller.prototype = {
-                acceptedCookieKey:  'taskboard-hide-accepted',
-                ownerCookieKey:     'taskboard-filter-by-owner',
+                acceptedCookieKey: 'taskboard-hide-accepted',
+                ownerCookieKey: 'taskboard-filter-by-owner',
                 iterationCookieKey: 'taskboard-filter-by-iteration',
                 projectOidCookieKey:'taskboard-current-project',
-                noOwnerLabel:       'No Owner',
-                allOwnersLabel:     'All Team Members',
+                noOwnerLabel: 'No Owner',
+                allOwnersLabel: 'All Team Members',
 
                 getIterationByOid: function(objectID) {
                     for (var i = 0; i < this.iterations.length; i++) {
@@ -431,7 +439,8 @@
                 showEditor: function(item, schema) {
 
                     var editorConfig = {
-                        props: (showActuals) ? ['Estimate', 'ToDo', 'Actuals', 'Owner', 'State'] : ['Estimate', 'ToDo', 'Owner', 'State'],
+//                        props: (showActuals) ? ['Estimate', 'ToDo', 'Actuals', 'Owner', 'State'] : ['Estimate', 'ToDo', 'Owner', 'State'],
+                        props: (showActuals) ? ['ToDo', 'Actuals', 'Owner', 'State'] : ['ToDo', 'Owner', 'State'],
                         propertyKeyAccessors: {
                             Owner: function(prop) { return prop != null ? prop.LoginName : null; }
                         },
@@ -509,7 +518,7 @@
                         selectedIndex = 0;
 
                         if (selectedOwner) {
-                            RALLY.toolkit.showWarning('The selected owner \'' + selectedOwner + '\' does not exist in this view.  Reset the filtering to ' + this.allOwnersLabel);
+                            RALLY.toolkit.showWarning('The selected owner \'' + selectedOwner + '\' does not exist in this view. Reset the filtering to ' + this.allOwnersLabel);
                         }
                     }
                     this.userSelect.selectedIndex = '' + selectedIndex;
@@ -795,12 +804,11 @@
 
             /** Custom styles for this implementation **/
             #wrapper {
-                margin: .8em;
+/** emptied wrapper - the new App Banner was getting hosed by whatever was in here **/
+/** also had to modify header - it all looks OK now, but maybe should sort it out later **/
             }
             #header {
                 border-bottom: 2px solid #666;
-                padding: .2em .3em;
-                margin-bottom: .4em;
             }
             #header #title {
                 float: left;
@@ -943,11 +951,9 @@
     </head>
     <body>
     <div id="wrapper">
-        <div id="status"></div>
-        <div id="header">
-            <div id="title"><h3>Task Board</h3></div>
-            <div id="info"></div>
-            <div class="clear"></div>
+       <div id="header">
+          <div id="info"></div>
+          <div id="status"></div>
         </div>
         <div id="filter">
             <div id="project">
